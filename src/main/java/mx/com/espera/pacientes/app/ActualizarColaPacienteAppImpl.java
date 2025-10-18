@@ -3,6 +3,6 @@ package mx.com.espera.pacientes.app;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InsertarColaPacienteAppImpl implements InsertarColaPacienteApp {
+public class ActualizarColaPacienteAppImpl implements ActualizarColaPacienteApp {
 
 }
