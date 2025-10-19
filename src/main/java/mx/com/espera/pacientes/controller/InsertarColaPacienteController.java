@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/cola/v1.0")
 @CrossOrigin(origins = "*")
-public class InsertarPacienteColaController {
+public class InsertarColaPacienteController {
 
 }

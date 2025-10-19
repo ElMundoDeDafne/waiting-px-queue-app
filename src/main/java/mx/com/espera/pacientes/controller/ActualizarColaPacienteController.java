@@ -8,17 +8,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import mx.com.espera.pacientes.app.ActualizarColaPacienteApp;
+import mx.com.espera.pacientes.dto.PacienteDTO;
 
 @RestController
 @RequestMapping("/api/cola/v1.0")
 @CrossOrigin(origins = "*")
-public class ActualizarColaController {
+public class ActualizarColaPacienteController {
 	
 	@Autowired
 	private ActualizarColaPacienteApp actualizarColaPxApp;
 	
 	@PostMapping("/actualizar/get")
-	public Object actualizarColaPacientes(@RequestBody Object dto) throws Exception {
+	public Object actualizarColaPacientes(@RequestBody PacienteDTO dto) throws Exception {
+		
 		return null;
 	}
 }
