@@ -1,5 +1,6 @@
 package mx.com.espera.pacientes.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,19 +11,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import mx.com.espera.pacientes.app.ActualizarColaPacienteApp;
+import mx.com.espera.pacientes.app.RegistroPersonaApp;
 import mx.com.espera.pacientes.dto.PacienteDTO;
+import mx.com.espera.pacientes.dto.ResponseDTO;
 
 @RestController
 @RequestMapping("/api/cola/v1.0")
 @CrossOrigin(origins = "*")
-public class ActualizarColaPacienteController {
+public class RegistroPacienteController {
 	
-	@Autowired
-	private ActualizarColaPacienteApp actualizarColaPxApp;
+	@Autowired RegistroPersonaApp registro;
 	
-	@PostMapping("/actualizar/get")
-	public ResponseEntity<Map<String,Object>> actualizarColaPacientes(@RequestBody PacienteDTO dto) throws Exception {
+	@PostMapping("/registro/paciente")
+	public ResponseEntity<Map<String,Object>> registroPaciente(@RequestBody PacienteDTO dto) throws Exception {
+		ResponseDTO respuesta = new ResponseDTO();
+		Map<String, Object> data = new HashMap();
+		registro.registroPersona(dto);
+		data.put("datos", data);
+		respuesta.setExito(true);
 		
 		return null;
 	}

@@ -11,4 +11,10 @@ public class InsertarColaPacienteAppImpl implements InsertarColaPacienteApp {
 		
 	}
 
+	@Override
+	public void registroPaciente() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

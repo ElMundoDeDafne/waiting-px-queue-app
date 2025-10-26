@@ -5,7 +5,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,13 +21,18 @@ public class PacienteEntity implements Serializable {
 	 */
 	private static final long serialVersionUID = -1645802151904007108L;
 	private Long idPaciente;
-	private String primerNombre;
-	private String segundoNombre;
-	private String apellidoPaterno;
-	private String apellidoMaterno;
-	private LocalDate fechaConsulta;
-	private LocalTime horaConsulta;
+	private LocalDateTime fechaConsulta;
 	private LocalDateTime fechaSiguienteConsulta;
+	private String motivoConsulta;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "ID_SIGNOS_VITALES", referencedColumnName = "ID_SIGNOS_VITALES")	
+	private SignoVitalEntity signosVitales;
+
+	@OneToOne
+	@MapsId
+	@JoinColumn(name="id_medico")
+	private PersonaEntity persona; //un paciente es una persona
 	
 	public Long getIdPaciente() {
 		return idPaciente;
@@ -31,41 +40,11 @@ public class PacienteEntity implements Serializable {
 	public void setIdPaciente(Long idPaciente) {
 		this.idPaciente = idPaciente;
 	}
-	public String getPrimerNombre() {
-		return primerNombre;
-	}
-	public void setPrimerNombre(String primerNombre) {
-		this.primerNombre = primerNombre;
-	}
-	public String getSegundoNombre() {
-		return segundoNombre;
-	}
-	public void setSegundoNombre(String segundoNombre) {
-		this.segundoNombre = segundoNombre;
-	}
-	public String getApellidoPaterno() {
-		return apellidoPaterno;
-	}
-	public void setApellidoPaterno(String apellidoPaterno) {
-		this.apellidoPaterno = apellidoPaterno;
-	}
-	public String getApellidoMaterno() {
-		return apellidoMaterno;
-	}
-	public void setApellidoMaterno(String apellidoMaterno) {
-		this.apellidoMaterno = apellidoMaterno;
-	}
-	public LocalDate getFechaConsulta() {
+	public LocalDateTime getFechaConsulta() {
 		return fechaConsulta;
 	}
-	public void setFechaConsulta(LocalDate fechaConsulta) {
+	public void setFechaConsulta(LocalDateTime fechaConsulta) {
 		this.fechaConsulta = fechaConsulta;
-	}
-	public LocalTime getHoraConsulta() {
-		return horaConsulta;
-	}
-	public void setHoraConsulta(LocalTime horaConsulta) {
-		this.horaConsulta = horaConsulta;
 	}
 	public LocalDateTime getFechaSiguienteConsulta() {
 		return fechaSiguienteConsulta;
@@ -73,6 +52,22 @@ public class PacienteEntity implements Serializable {
 	public void setFechaSiguienteConsulta(LocalDateTime fechaSiguienteConsulta) {
 		this.fechaSiguienteConsulta = fechaSiguienteConsulta;
 	}
-	
-	
+	public String getMotivoConsulta() {
+		return motivoConsulta;
+	}
+	public void setMotivoConsulta(String motivoConsulta) {
+		this.motivoConsulta = motivoConsulta;
+	}
+	public SignoVitalEntity getSignosVitales() {
+		return signosVitales;
+	}
+	public void setSignosVitales(SignoVitalEntity signosVitales) {
+		this.signosVitales = signosVitales;
+	}
+	public PersonaEntity getPersona() {
+		return persona;
+	}
+	public void setPersona(PersonaEntity persona) {
+		this.persona = persona;
+	}	
 }
