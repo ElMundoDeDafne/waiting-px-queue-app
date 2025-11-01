@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import mx.com.espera.pacientes.dto.PersonaDTO;
 import mx.com.espera.pacientes.dto.ResponseDTO;
@@ -24,18 +25,33 @@ public class RegistroPersonaAppImpl implements RegistroPersonaApp {
 	@Autowired MedicoRepository medicoRepository;
 	
 	@Override
-	public ResponseDTO registroPersona(PersonaDTO personaDTO) {
+	public ResponseDTO registroPersona(@RequestBody PersonaDTO personaDTO) {
 		ResponseDTO respuesta = new ResponseDTO();
 		Map<String, Object> hm = new HashMap();		
-		boolean esMedico = personaDTO.getCedulaProfesional()!=null&&personaDTO.getCedulaProfesional().length()>0;
+		registrarPersona(personaDTO);
+		hm.put("datos", personaDTO.getMensajes());
+		respuesta.setExito(true);
+		respuesta.setRespuesta(hm);
+		return respuesta;
+	}
+
+	/***
+	 * Método para hacer el registro de una persona.
+	 * @param personaDTO
+	 * @author Christian
+	 */
+	private void registrarPersona(PersonaDTO personaDTO) {
 		MedicoEntity medicoEntity;
 		PacienteEntity pacienteEntity;
-		PersonaEntity personaEntity = new PersonaEntity();
+		PersonaEntity personaEntity = new PersonaEntity();		
+		boolean esMedico = personaDTO.getCedulaProfesional()!=null&&personaDTO.getCedulaProfesional().length()>0;
 		personaEntity.setApMaterno(personaDTO.getApellidoMaterno());
 		personaEntity.setApPaterno(personaDTO.getApellidoPaterno());
 		personaEntity.setFechaNacimiento(personaDTO.getFechaNacimiento());
 		personaEntity.setPrimerNombre(personaDTO.getPrimerNombre());
 		personaEntity.setSegundoNombre(personaDTO.getSegundoNombre()!=null&&personaDTO.getSegundoNombre().length()>0?personaDTO.getSegundoNombre():null);
+		personaEntity.setGenero(personaDTO.getGenero());
+		personaEntity.setSexo(personaDTO.getSexo());
 		personaRepository.save(personaEntity);
 		if(esMedico) {
 			medicoEntity = new MedicoEntity();
@@ -50,9 +66,6 @@ public class RegistroPersonaAppImpl implements RegistroPersonaApp {
 			//Por ahora se registran datos basicos de la persona, suponiendo que se registrarán en consulta los demás (signos vitales)
 			pacienteRepository.save(pacienteEntity);
 		}
-		hm.put("datos", "Registro exitoso!");
-		respuesta.setExito(true);
-		respuesta.setRespuesta(hm);
-		return respuesta;
+		personaDTO.setMensajes("Registro exitoso");
 	}
 }

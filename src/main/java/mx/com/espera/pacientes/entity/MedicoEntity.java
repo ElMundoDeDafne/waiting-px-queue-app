@@ -1,17 +1,27 @@
 package mx.com.espera.pacientes.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
-
+import jakarta.persistence.Table;
+@Entity
+@Table(name = "MEDICO")
 public class MedicoEntity {
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID_MEDICO")
 	private Long idMedico;
 	private String cedulaProfesional;
 	private String cedulaProfesionalEsp;
 	
 	@OneToOne
 	@MapsId
-	@JoinColumn(name="id_medico")
+	@JoinColumn(name="ID_MEDICO")
 	private PersonaEntity persona; //un medico es una persona
 	
 	public String getCedulaProfesional() {

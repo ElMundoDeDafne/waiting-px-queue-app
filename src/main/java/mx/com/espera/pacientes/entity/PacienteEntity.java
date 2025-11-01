@@ -4,11 +4,17 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -20,18 +26,20 @@ public class PacienteEntity implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -1645802151904007108L;
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID_PACIENTE")
 	private Long idPaciente;
 	private LocalDateTime fechaConsulta;
 	private LocalDateTime fechaSiguienteConsulta;
 	private String motivoConsulta;
-	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "ID_SIGNOS_VITALES", referencedColumnName = "ID_SIGNOS_VITALES")	
-	private SignoVitalEntity signosVitales;
+	private LocalDateTime fechaRegistro;
+	@OneToMany(mappedBy = "paciente")
+	private List<SignoVitalEntity> signosVitales; //una persona tiene mas de una forma de localizar
 
 	@OneToOne
 	@MapsId
-	@JoinColumn(name="id_medico")
+	@JoinColumn(name="ID_PACIENTE")
 	private PersonaEntity persona; //un paciente es una persona
 	
 	public Long getIdPaciente() {
@@ -58,16 +66,23 @@ public class PacienteEntity implements Serializable {
 	public void setMotivoConsulta(String motivoConsulta) {
 		this.motivoConsulta = motivoConsulta;
 	}
-	public SignoVitalEntity getSignosVitales() {
-		return signosVitales;
-	}
-	public void setSignosVitales(SignoVitalEntity signosVitales) {
-		this.signosVitales = signosVitales;
-	}
 	public PersonaEntity getPersona() {
 		return persona;
 	}
 	public void setPersona(PersonaEntity persona) {
 		this.persona = persona;
-	}	
+	}
+	public LocalDateTime getFechaRegistro() {
+		return fechaRegistro;
+	}
+	public void setFechaRegistro(LocalDateTime fechaRegistro) {
+		this.fechaRegistro = fechaRegistro;
+	}
+	public List<SignoVitalEntity> getSignosVitales() {
+		return signosVitales;
+	}
+	public void setSignosVitales(List<SignoVitalEntity> signosVitales) {
+		this.signosVitales = signosVitales;
+	}
+	
 }

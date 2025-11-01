@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import mx.com.espera.pacientes.app.RegistroPersonaApp;
 import mx.com.espera.pacientes.dto.PacienteDTO;
+import mx.com.espera.pacientes.dto.PersonaDTO;
 import mx.com.espera.pacientes.dto.ResponseDTO;
 
 @RestController
@@ -26,10 +28,8 @@ public class RegistroPacienteController {
 	public ResponseEntity<Map<String,Object>> registroPaciente(@RequestBody PacienteDTO dto) throws Exception {
 		ResponseDTO respuesta = new ResponseDTO();
 		Map<String, Object> data = new HashMap();
-		registro.registroPersona(dto);
-		data.put("datos", data);
-		respuesta.setExito(true);
-		
-		return null;
+		respuesta = registro.registroPersona(dto);
+		data.put("datos", respuesta.getRespuesta());		
+		return new ResponseEntity<>(data, HttpStatus.OK);
 	}
 }

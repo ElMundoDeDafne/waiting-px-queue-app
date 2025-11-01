@@ -2,8 +2,14 @@ package mx.com.espera.pacientes.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PersonaDTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2576563093924403703L;
 	private String primerNombre;
 	private String segundoNombre;
 	private String apellidoPaterno;
@@ -13,7 +19,7 @@ public class PersonaDTO implements Serializable {
 	private String genero;
 	private String sexo;
 	private LocalDate fechaNacimiento;
-	private String motivoConsulta;
+	private List<String> mensajes;
 	
 	public String getPrimerNombre() {
 		return primerNombre;
@@ -69,11 +75,13 @@ public class PersonaDTO implements Serializable {
 	public void setFechaNacimiento(LocalDate fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
-	public String getMotivoConsulta() {
-		return motivoConsulta;
+	public List<String> getMensajes() {
+		return mensajes;
 	}
-	public void setMotivoConsulta(String motivoConsulta) {
-		this.motivoConsulta = motivoConsulta;
+	public void setMensajes(String mensaje) {
+		if(this.mensajes==null)
+			this.mensajes = new ArrayList();
+		this.mensajes.add(mensaje);
 	}
 	
 	

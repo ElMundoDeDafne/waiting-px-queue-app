@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class SignosVitalesDTO implements Serializable {
 	
-	private Double peso;
 	private Double temperatura;
+	private Double peso;
 	private Double estatura;
 	private Double imc;
 	private Double oxigenacion;

@@ -36,7 +36,7 @@ public class ActualizarDatosPacienteAppImpl implements ActualizarDatosPacienteAp
 			signoVitalEntity.setPresionSistolica(signosVitales.getPresionSistolica());
 			signoVitalRepository.save(signoVitalEntity);
 			pacienteEntity = pacienteRepository.findByIdPaciente(pacienteDTO.getIdPaciente());
-			pacienteEntity.setSignosVitales(signoVitalEntity);
+//			pacienteEntity.setSignosVitales(signoVitalEntity);
 			pacienteRepository.save(pacienteEntity);
 			respuesta.setExito(true);
 			hmResp.put("datos","Actualizacion id paciente "+pacienteEntity.getIdPaciente()+" exitosa.");
