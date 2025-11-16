@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/cola/v1.0")
-//@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*")
 public class HomeController {
 	
 	@Value("${spring.application.name}") String nameMs;

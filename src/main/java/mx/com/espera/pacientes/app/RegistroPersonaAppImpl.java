@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import mx.com.espera.pacientes.dto.PersonaDTO;
 import mx.com.espera.pacientes.dto.ResponseDTO;
 import mx.com.espera.pacientes.entity.MedicoEntity;
@@ -20,9 +23,7 @@ import mx.com.espera.pacientes.repository.PersonaRepository;
 @Service
 public class RegistroPersonaAppImpl implements RegistroPersonaApp {
 
-	@Autowired PersonaRepository personaRepository;
-	@Autowired PacienteRepository pacienteRepository;
-	@Autowired MedicoRepository medicoRepository;
+	@PersistenceContext EntityManager em;
 	
 	@Override
 	public ResponseDTO registroPersona(@RequestBody PersonaDTO personaDTO) {
@@ -40,6 +41,7 @@ public class RegistroPersonaAppImpl implements RegistroPersonaApp {
 	 * @param personaDTO
 	 * @author Christian
 	 */
+	@Transactional
 	private void registrarPersona(PersonaDTO personaDTO) {
 		MedicoEntity medicoEntity;
 		PacienteEntity pacienteEntity;
@@ -52,19 +54,19 @@ public class RegistroPersonaAppImpl implements RegistroPersonaApp {
 		personaEntity.setSegundoNombre(personaDTO.getSegundoNombre()!=null&&personaDTO.getSegundoNombre().length()>0?personaDTO.getSegundoNombre():null);
 		personaEntity.setGenero(personaDTO.getGenero());
 		personaEntity.setSexo(personaDTO.getSexo());
-		personaRepository.save(personaEntity);
+		em.persist(personaEntity);
 		if(esMedico) {
 			medicoEntity = new MedicoEntity();
 			medicoEntity.setPersona(personaEntity);
 			medicoEntity.setCedulaProfesional(personaDTO.getCedulaProfesional());
 			medicoEntity.setCedulaProfesionalEsp(personaDTO.getCedulaProfesionalEsp());
-			medicoRepository.save(medicoEntity);
+			em.persist(medicoEntity);
 		} else {
 			pacienteEntity = new PacienteEntity();
 			pacienteEntity.setPersona(personaEntity);
 			pacienteEntity.setFechaConsulta(LocalDateTime.now());
 			//Por ahora se registran datos basicos de la persona, suponiendo que se registrarán en consulta los demás (signos vitales)
-			pacienteRepository.save(pacienteEntity);
+			em.persist(pacienteEntity);
 		}
 		personaDTO.setMensajes("Registro exitoso");
 	}
