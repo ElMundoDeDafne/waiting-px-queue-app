@@ -3,6 +3,7 @@ package mx.com.espera.pacientes.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 @Entity
@@ -27,8 +29,7 @@ public class MedicoEntity implements Serializable {
 	private Long idMedico;
 	private String cedulaProfesional;
 	private String cedulaProfesionalEsp;
-	@ManyToMany
-	@JoinTable (name = "Paciente", joinColumns = @JoinColumn(name="paciente_id"), inverseJoinColumns = @JoinColumn(name = "id_medico"))
+	@OneToMany(mappedBy = "medico", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PacienteEntity> pacientes; //un medico puede tener uno o mas pacientes
 	
 	@OneToOne

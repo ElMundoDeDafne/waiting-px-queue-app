@@ -7,7 +7,9 @@ public class ValidadoresPacienteAppImpl implements ValidadoresPacienteApp {
 	@Override
 	public Boolean validarDatosPaciente(PacienteDTO pacienteDTO) {
 		Boolean esValido = false;
-		
+		if(pacienteDTO.getPrimerNombre()!=null) {
+			esValido = true;
+		}
 		return esValido;
 	}
 	

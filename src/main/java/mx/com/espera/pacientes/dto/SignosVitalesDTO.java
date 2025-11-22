@@ -11,6 +11,7 @@ public class SignosVitalesDTO implements Serializable {
 	private Double oxigenacion;
 	private Double presionSistolica;
 	private Double presionDiastolica;
+	private Long idPaciente;
 	public Double getPeso() {
 		return peso;
 	}
@@ -53,4 +54,11 @@ public class SignosVitalesDTO implements Serializable {
 	public void setPresionDiastolica(Double presionDiastolica) {
 		this.presionDiastolica = presionDiastolica;
 	}
+	public Long getIdPaciente() {
+		return idPaciente;
+	}
+	public void setIdPaciente(Long idPaciente) {
+		this.idPaciente = idPaciente;
+	}
+	
 }

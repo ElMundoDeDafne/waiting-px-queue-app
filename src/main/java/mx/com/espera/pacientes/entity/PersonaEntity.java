@@ -20,14 +20,19 @@ public class PersonaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_PERSONA")
 	private Long idPersona;
+	@Column(length = 50)
 	private String primerNombre;
+	@Column(length = 50)
 	private String segundoNombre;
+	@Column(length = 50)
 	private String apPaterno;
+	@Column(length = 50)
 	private String apMaterno;
 	private LocalDate fechaNacimiento;
+	@Column(length = 15)
 	private String sexo;
+	@Column(length = 15)
 	private String genero;
-	@OneToOne(mappedBy = "persona", cascade = CascadeType.ALL)
 	private PacienteEntity paciente;
 	@OneToOne(mappedBy = "persona", cascade = CascadeType.ALL)
 	private MedicoEntity medico;

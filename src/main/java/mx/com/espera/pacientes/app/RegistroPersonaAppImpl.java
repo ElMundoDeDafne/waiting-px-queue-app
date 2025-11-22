@@ -64,7 +64,7 @@ public class RegistroPersonaAppImpl implements RegistroPersonaApp {
 		} else {
 			pacienteEntity = new PacienteEntity();
 			pacienteEntity.setPersona(personaEntity);
-			pacienteEntity.setFechaConsulta(LocalDateTime.now());
+			pacienteEntity.setFechaRegistro(LocalDateTime.now());
 			//Por ahora se registran datos basicos de la persona, suponiendo que se registrarán en consulta los demás (signos vitales)
 			em.persist(pacienteEntity);
 		}

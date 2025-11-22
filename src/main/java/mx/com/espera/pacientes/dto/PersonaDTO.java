@@ -19,6 +19,7 @@ public class PersonaDTO implements Serializable {
 	private String genero;
 	private String sexo;
 	private LocalDate fechaNacimiento;
+	private List<LocalizadorDTO> localizadores;
 	private List<String> mensajes;
 	
 	public String getPrimerNombre() {
@@ -83,7 +84,14 @@ public class PersonaDTO implements Serializable {
 			this.mensajes = new ArrayList();
 		this.mensajes.add(mensaje);
 	}
-	
-	
+	public List<LocalizadorDTO> getLocalizadores() {
+		return localizadores;
+	}
+	public void setLocalizadores(List<LocalizadorDTO> localizadores) {
+		this.localizadores = localizadores;
+	}
+	public void setMensajes(List<String> mensajes) {
+		this.mensajes = mensajes;
+	}
 	
 }

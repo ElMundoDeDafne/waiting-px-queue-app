@@ -2,6 +2,7 @@ package mx.com.espera.pacientes.app;
 
 import java.util.List;
 
+import mx.com.espera.pacientes.dto.SignosVitalesDTO;
 import mx.com.espera.pacientes.entity.PacienteEntity;
 
 public interface PacienteApp {
@@ -15,7 +16,13 @@ public interface PacienteApp {
 	 * @param idMedico
 	 * @return
 	 */
-	List<PacienteEntity> obtenerTodosLosPacientesPorMedico(Long idMedico);	
+	List<PacienteEntity> obtenerTodosLosPacientesPorMedico(Long idMedico);
+	/**
+	 * Recuperamos un historial de consultas.
+	 */
+	void obtenerHistorialConsultas();
+	
+	String registrarSignosVitales(SignosVitalesDTO signosVitales);
 	
 	//Metodos para:
 	//actualizar posicion en lista

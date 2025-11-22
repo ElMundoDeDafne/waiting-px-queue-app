@@ -9,11 +9,13 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -45,8 +47,11 @@ public class PacienteEntity implements Serializable {
 	@Column(name = "SIGNO_VITAL")
 	private List<SignoVitalEntity> signosVitales; //una persona tiene mas de una forma de localizar
     @ManyToMany(mappedBy = "pacientes")
-    @Column(name = "MEDICO")
-	private List<MedicoEntity> medicos; //un paciente tiene uno o mas doctores
+    
+//    @Column(name = "MEDICO")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_medico")
+	private MedicoEntity medico; //un paciente tiene uno o mas doctores
     @Column(name = "POSICION")
     private Integer posicion;
 
@@ -111,12 +116,14 @@ public class PacienteEntity implements Serializable {
 		this.signosVitales = signosVitales;
 	}
 
-	public List<MedicoEntity> getMedicos() {
-		return medicos;
+
+
+	public MedicoEntity getMedico() {
+		return medico;
 	}
 
-	public void setMedicos(List<MedicoEntity> medicos) {
-		this.medicos = medicos;
+	public void setMedico(MedicoEntity medico) {
+		this.medico = medico;
 	}
 
 	public Integer getPosicion() {

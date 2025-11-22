@@ -18,22 +18,30 @@ public class SignoVitalEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_SIGNOS_VITALES")
 	private Long idSignosVitales;
+	@Column(precision = 3,scale=2)
 	private Double peso;
+	@Column(precision = 3,scale=2)
 	private Double temperatura;
+	@Column(precision = 3,scale=2)
 	private Double estatura;
+	@Column(precision = 3,scale=2)
 	private Double imc;
+	@Column(precision = 3,scale=2)
 	private Double oxigenacion;
+	@Column(precision = 3,scale=2)
 	private Double presionSistolica;
+	@Column(precision = 3,scale=2)
 	private Double presionDiastolica;
 	private LocalDateTime fechaRegistro;
 	@ManyToOne
     @JoinColumn(name = "ID_PACIENTE") // FK en la tabla empleado
 	private PacienteEntity paciente; //un localizador tiene una persona
-	public Long getIdSignoVital() {
-		return idSignosVitales;
+
+	public PacienteEntity getPaciente() {
+		return paciente;
 	}
-	public void setIdSignoVital(Long idSignoVitales) {
-		this.idSignosVitales = idSignoVitales;
+	public void setPaciente(PacienteEntity paciente) {
+		this.paciente = paciente;
 	}
 	public Double getPeso() {
 		return peso;
