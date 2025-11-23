@@ -33,7 +33,6 @@ public class PersonaEntity {
 	private String sexo;
 	@Column(length = 15)
 	private String genero;
-	private PacienteEntity paciente;
 	@OneToOne(mappedBy = "persona", cascade = CascadeType.ALL)
 	private MedicoEntity medico;
 	@OneToMany(mappedBy = "persona")
@@ -86,12 +85,7 @@ public class PersonaEntity {
 	public void setGenero(String genero) {
 		this.genero = genero;
 	}
-	public PacienteEntity getPaciente() {
-		return paciente;
-	}
-	public void setPaciente(PacienteEntity paciente) {
-		this.paciente = paciente;
-	}
+
 	public MedicoEntity getMedico() {
 		return medico;
 	}

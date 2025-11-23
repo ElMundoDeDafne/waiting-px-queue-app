@@ -15,7 +15,8 @@ public interface PacienteRepository extends JpaRepository<PacienteEntity,Long>{
 	PacienteEntity findByIdPaciente(@Param("idPaciente") Long idPaciente);
 	@Query(value = "select p from PacienteEntity p")
 	List<PacienteEntity> findAllPacientes();
-	PacienteEntity actualizarPaciente(PacienteDTO pacienteDTO);
-	@Query(value = "SELECT pacienteEntity FROM PacienteEntity pacienteEntity WHERE pacienteEntity.medicos.idMedico = :idMedico ")
+	
+//	PacienteEntity actualizarPaciente(PacienteDTO pacienteDTO);
+	@Query(value = "SELECT pacienteEntity FROM PacienteEntity pacienteEntity WHERE pacienteEntity.medico.idMedico = :idMedico ")
 	List<PacienteEntity> findAllPacientesByIdMedico(@Param("idMedico") Long idMedico);
 }

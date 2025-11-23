@@ -45,6 +45,5 @@ public class PacienteController {
 		respuesta = pacienteApp.registrarSignosVitales(dto);
 		data.put("datos", respuesta);
 		return new ResponseEntity<>(data, HttpStatus.OK);
-	}	
-	//registro de localizador (datos contacto)
+	}
 }

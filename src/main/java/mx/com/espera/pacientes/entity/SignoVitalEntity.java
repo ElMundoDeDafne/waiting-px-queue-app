@@ -18,19 +18,12 @@ public class SignoVitalEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_SIGNOS_VITALES")
 	private Long idSignosVitales;
-	@Column(precision = 3,scale=2)
 	private Double peso;
-	@Column(precision = 3,scale=2)
 	private Double temperatura;
-	@Column(precision = 3,scale=2)
 	private Double estatura;
-	@Column(precision = 3,scale=2)
 	private Double imc;
-	@Column(precision = 3,scale=2)
 	private Double oxigenacion;
-	@Column(precision = 3,scale=2)
 	private Double presionSistolica;
-	@Column(precision = 3,scale=2)
 	private Double presionDiastolica;
 	private LocalDateTime fechaRegistro;
 	@ManyToOne

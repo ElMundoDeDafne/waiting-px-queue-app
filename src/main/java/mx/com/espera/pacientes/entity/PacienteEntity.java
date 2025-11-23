@@ -45,7 +45,7 @@ public class PacienteEntity implements Serializable {
 	private LocalDateTime fechaRegistro;
 	@OneToMany(mappedBy = "paciente")
 	@Column(name = "SIGNO_VITAL")
-	private List<SignoVitalEntity> signosVitales; //una persona tiene mas de una forma de localizar
+	private transient List<SignoVitalEntity> signosVitales; //una persona tiene mas de una forma de localizar
     @ManyToMany(mappedBy = "pacientes")
     
 //    @Column(name = "MEDICO")

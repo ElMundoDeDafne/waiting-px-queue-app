@@ -2,6 +2,7 @@ package mx.com.espera.pacientes.app;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import mx.com.espera.pacientes.dto.LocalizadorDTO;
 import mx.com.espera.pacientes.dto.PersonaDTO;
 import mx.com.espera.pacientes.dto.ResponseDTO;
+import mx.com.espera.pacientes.entity.LocalizadorEntity;
 import mx.com.espera.pacientes.entity.MedicoEntity;
 import mx.com.espera.pacientes.entity.PacienteEntity;
 import mx.com.espera.pacientes.entity.PersonaEntity;
@@ -24,6 +27,7 @@ import mx.com.espera.pacientes.repository.PersonaRepository;
 public class RegistroPersonaAppImpl implements RegistroPersonaApp {
 
 	@PersistenceContext EntityManager em;
+	@Autowired ValidadoresPacienteApp valPac;
 	
 	@Override
 	public ResponseDTO registroPersona(@RequestBody PersonaDTO personaDTO) {
@@ -45,6 +49,9 @@ public class RegistroPersonaAppImpl implements RegistroPersonaApp {
 	private void registrarPersona(PersonaDTO personaDTO) {
 		MedicoEntity medicoEntity;
 		PacienteEntity pacienteEntity;
+		LocalizadorEntity localizadorEntity;
+		Iterator<LocalizadorDTO> itLocalizadores;
+		LocalizadorDTO localizadorDTO;
 		PersonaEntity personaEntity = new PersonaEntity();		
 		boolean esMedico = personaDTO.getCedulaProfesional()!=null&&personaDTO.getCedulaProfesional().length()>0;
 		personaEntity.setApMaterno(personaDTO.getApellidoMaterno());
@@ -67,6 +74,21 @@ public class RegistroPersonaAppImpl implements RegistroPersonaApp {
 			pacienteEntity.setFechaRegistro(LocalDateTime.now());
 			//Por ahora se registran datos basicos de la persona, suponiendo que se registrarán en consulta los demás (signos vitales)
 			em.persist(pacienteEntity);
+		}
+		//registro de datos de contacto
+		localizadorEntity = new LocalizadorEntity();
+		itLocalizadores = personaDTO.getLocalizadores().iterator();
+		while(itLocalizadores.hasNext()) {
+			localizadorDTO = itLocalizadores.next();
+			if(!valPac.validarLocalizadores(localizadorDTO)) {
+				personaDTO.setMensajes("Existen errores en los localizadores");
+				break;
+			} else {
+				localizadorEntity.setCodigo(localizadorDTO.getCodigoLocalizador());
+				localizadorEntity.setPersona(personaEntity);
+				localizadorEntity.setContenido(localizadorDTO.getValorLocalizador());
+				localizadorEntity.setFechaRegistro(LocalDateTime.now());
+			}
 		}
 		personaDTO.setMensajes("Registro exitoso");
 	}
