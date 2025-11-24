@@ -8,6 +8,7 @@ import mx.com.espera.pacientes.entity.SignoVitalEntity;
 
 @Repository
 public interface SignoVitalRepository extends JpaRepository<SignoVitalEntity, Long>{
-	SignoVitalEntity findSignoVitalEntityByIdPaciente(Long idPaciente);
+	SignoVitalEntity findSignoVitalEntityByIdSignosVitales(Long idPaciente);
 	PacienteEntity findPacienteEntityByIdSignosVitales(Long idSignosVitales);
+	
 }

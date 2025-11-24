@@ -2,6 +2,7 @@ package mx.com.espera.pacientes.dto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class PacienteDTO extends PersonaDTO implements Serializable {
 	
@@ -16,6 +17,8 @@ public class PacienteDTO extends PersonaDTO implements Serializable {
 	private LocalDateTime fechaRegistro;
 	private LocalDateTime fechaActualizacion;
 	private SignosVitalesDTO signosVitalesDTO;
+	private List<MedicoDTO> medicos;
+	private String operacion;
 	
 	public Long getIdPaciente() {
 		return idPaciente;
@@ -59,8 +62,17 @@ public class PacienteDTO extends PersonaDTO implements Serializable {
 	public void setSignosVitalesDTO(SignosVitalesDTO signosVitalesDTO) {
 		this.signosVitalesDTO = signosVitalesDTO;
 	}
-	
-
-	
+	public List<MedicoDTO> getMedicos() {
+		return medicos;
+	}
+	public void setMedicos(List<MedicoDTO> medicos) {
+		this.medicos = medicos;
+	}
+	public String getOperacion() {
+		return operacion;
+	}
+	public void setOperacion(String operacion) {
+		this.operacion = operacion;
+	}
 	
 }
