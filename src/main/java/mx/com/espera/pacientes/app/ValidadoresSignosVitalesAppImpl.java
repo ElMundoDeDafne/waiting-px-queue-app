@@ -68,12 +68,46 @@ Validación general: [30 – 150]
 	public String validarSignosVitales(SignosVitalesDTO signosVitales) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(validarTemperatura(signosVitales.getTemperatura()));
-		sb.append(validarPeso(signosVitales.getPeso()));
+		sb.append(validarPeso(signosVitales.getEstatura(),signosVitales.getPeso()));
 		return sb.toString();
 	}
 	
-	private Object validarPeso(Double peso) {
-		// TODO Auto-generated method stub
+	/**
+	 * Índice de Masa Corporal (IMC)
+		peso / (estatura * estatura)
+		Delgadez: < 18.5
+		Normal: 18.5 – 24.9
+		Sobrepeso: 25.0 – 29.9
+		Obesidad I: 30.0 – 34.9
+		Obesidad II: 35.0 – 39.9
+		Obesidad III: ≥ 40
+	 * */
+	private String validarPeso(Double estatura, Double peso) {
+		StringBuilder sb = new StringBuilder();
+		Double imc;
+		//peso / (estatura * estatura)
+		if(Double.compare(0, 0) > 0) {
+			//aqui validamos el IMC
+			imc = peso / (Math.pow(estatura, 2));
+			if(Double.compare(imc,18.5) > 0 && Double.compare(imc,24.9) < 0) {
+				sb.append("IMC: OK");
+				return sb.toString();
+			} else if(Double.compare(imc,25.0) > 0 && Double.compare(imc,29.9) < 0) {
+				sb.append("IMC: Sobrepeso");
+				return sb.toString();
+			} else if(Double.compare(imc,30.0) > 0 && Double.compare(imc,34.9) < 0) {
+				sb.append("IMC: Obesidad I");
+				return sb.toString();				
+			} else if(Double.compare(imc,35.0) > 0 && Double.compare(imc,39.9) < 0) {
+				sb.append("IMC: Obesidad II");
+				return sb.toString();				
+			}  else if(Double.compare(imc,40.0) > 0) {
+				sb.append("IMC: Obesidad III");
+				return sb.toString();				
+			}
+		} else {
+			sb.append("Valores invalidos, debe ser mayor a 0.");
+		}
 		return null;
 	}
 
@@ -82,19 +116,18 @@ Validación general: [30 – 150]
 		if(Double.compare(temperatura, 0)>0) {
 			if(Double.compare(temperatura, 35)<0) {
 				sb.append("Paciente presenta hipotermia.");
-			}
-			
-			if(Double.compare(temperatura, 37.3)>0 && Double.compare(temperatura, 38.0) < 0) {
+				return sb.toString();
+			} else if(Double.compare(temperatura, 37.3)>0 && Double.compare(temperatura, 38.0) < 0) {
 				sb.append("Paciente presenta febricula.");
-			}
-			
-			if(Double.compare(temperatura, 38)>0) {
+				return sb.toString();
+			} else if(Double.compare(temperatura, 38)>0) {
 				sb.append("Paciente presenta fiebre.");
+				return sb.toString();
 			}			
 		} else {
 			sb.append("Valores invalidos, debe ser mayor a 35.");
 		}
-		return sb.toString();
+		return null;
 	}
 
 }
