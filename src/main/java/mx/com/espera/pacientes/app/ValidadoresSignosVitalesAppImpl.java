@@ -86,7 +86,7 @@ Validación general: [30 – 150]
 		StringBuilder sb = new StringBuilder();
 		Double imc;
 		//peso / (estatura * estatura)
-		if(Double.compare(0, 0) > 0) {
+		if(Double.compare(peso, 0) > 0 && Double.compare(estatura,0) > 0) {
 			//aqui validamos el IMC
 			imc = peso / (Math.pow(estatura, 2));
 			if(Double.compare(imc,18.5) > 0 && Double.compare(imc,24.9) < 0) {
@@ -106,7 +106,8 @@ Validación general: [30 – 150]
 				return sb.toString();				
 			}
 		} else {
-			sb.append("Valores invalidos, debe ser mayor a 0.");
+			sb.append("Valores invalidos, revisar peso y estatura.");
+			return sb.toString();
 		}
 		return null;
 	}
@@ -126,6 +127,7 @@ Validación general: [30 – 150]
 			}			
 		} else {
 			sb.append("Valores invalidos, debe ser mayor a 35.");
+			return sb.toString();
 		}
 		return null;
 	}
