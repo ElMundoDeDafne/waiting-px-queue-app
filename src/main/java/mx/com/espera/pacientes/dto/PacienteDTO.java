@@ -11,7 +11,7 @@ public class PacienteDTO extends PersonaDTO implements Serializable {
 	 */
 	private static final long serialVersionUID = 2825552759948417908L;
 	private Long idPaciente;
-	private Long posicion;
+	private Integer posicion;
 	private String motivoConsulta;
 	private String estatus;
 	private LocalDateTime fechaRegistro;
@@ -26,10 +26,10 @@ public class PacienteDTO extends PersonaDTO implements Serializable {
 	public void setIdPaciente(Long idPaciente) {
 		this.idPaciente = idPaciente;
 	}
-	public Long getPosicion() {
+	public Integer getPosicion() {
 		return posicion;
 	}
-	public void setPosicion(Long posicion) {
+	public void setPosicion(Integer posicion) {
 		this.posicion = posicion;
 	}
 	public String getMotivoConsulta() {

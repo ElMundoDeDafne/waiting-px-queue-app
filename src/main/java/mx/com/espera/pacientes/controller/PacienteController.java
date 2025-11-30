@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import mx.com.espera.pacientes.app.PacienteApp;
 import mx.com.espera.pacientes.app.RegistroPersonaApp;
+import mx.com.espera.pacientes.app.ValidadoresSignosVitalesApp;
 import mx.com.espera.pacientes.dto.MedicoDTO;
 import mx.com.espera.pacientes.dto.PacienteDTO;
 import mx.com.espera.pacientes.dto.ResponseDTO;
@@ -25,6 +26,7 @@ import mx.com.espera.pacientes.dto.SignosVitalesDTO;
 public class PacienteController {
 	@Autowired RegistroPersonaApp registro;
 	@Autowired PacienteApp pacienteApp;
+	@Autowired ValidadoresSignosVitalesApp validadoresSignosApp;
 	
 	@PostMapping("/paciente/registro")
 	public ResponseEntity<Map<String,Object>> paciente(@RequestBody PacienteDTO dto) throws Exception {
@@ -42,7 +44,7 @@ public class PacienteController {
 	public ResponseEntity<Map<String,Object>> registroSignosVit(@RequestBody SignosVitalesDTO dto) throws Exception {
 		String respuesta;
 		Map<String, Object> data = new HashMap();
-		respuesta = pacienteApp.registrarSignosVitales(dto);
+		respuesta = validadoresSignosApp.validarSignosVitales(dto);
 		data.put("datos", respuesta);
 		return new ResponseEntity<>(data, HttpStatus.OK);
 	}

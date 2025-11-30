@@ -43,11 +43,9 @@ public class PacienteEntity implements Serializable {
 	private String motivoConsulta;
 	@Column(name = "FECHA_REGISTRO")
 	private LocalDateTime fechaRegistro;
-	@OneToMany(mappedBy = "paciente")
-	@Column(name = "SIGNO_VITAL")
-	private transient List<SignoVitalEntity> signosVitales; //una persona tiene mas de una forma de localizar
-    @ManyToMany(mappedBy = "pacientes")
-    
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_signos_vitales", referencedColumnName = "id_signos_vitales")
+	private transient SignoVitalEntity signosVitales; //una persona tiene mas de una forma de localizar
 //    @Column(name = "MEDICO")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_medico")

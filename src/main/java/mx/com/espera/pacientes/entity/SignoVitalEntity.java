@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,10 +27,11 @@ public class SignoVitalEntity {
 	private Double presionSistolica;
 	private Double presionDiastolica;
 	private LocalDateTime fechaRegistro;
-	@ManyToOne
-    @JoinColumn(name = "ID_PACIENTE") // FK en la tabla empleado
+	@OneToOne
 	private PacienteEntity paciente; //un localizador tiene una persona
-
+	private String observaciones;
+	
+	
 	public PacienteEntity getPaciente() {
 		return paciente;
 	}
@@ -90,4 +92,11 @@ public class SignoVitalEntity {
 	public void setFechaRegistro(LocalDateTime fechaRegistro) {
 		this.fechaRegistro = fechaRegistro;
 	}
+	public String getObservaciones() {
+		return observaciones;
+	}
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+	
 }

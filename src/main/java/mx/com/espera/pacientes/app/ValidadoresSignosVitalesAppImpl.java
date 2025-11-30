@@ -3,9 +3,20 @@
  */
 package mx.com.espera.pacientes.app;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import mx.com.espera.pacientes.dto.SignosVitalesDTO;
+import mx.com.espera.pacientes.entity.PacienteEntity;
+import mx.com.espera.pacientes.entity.PersonaEntity;
+import mx.com.espera.pacientes.entity.SignoVitalEntity;
+import mx.com.espera.pacientes.exception.BusinessException;
+import mx.com.espera.pacientes.utils.PacienteConstants;
 
 /**
  * 
@@ -13,6 +24,8 @@ import mx.com.espera.pacientes.dto.SignosVitalesDTO;
 @Service
 public class ValidadoresSignosVitalesAppImpl implements ValidadoresSignosVitalesApp {
 
+	@PersistenceContext EntityManager em;
+	
 	/*
 	 * 
 	 * 2. Peso (kg)
@@ -22,10 +35,7 @@ No hay un rango general, pero sí límites razonables para validación:
 Rango válido típico: 2 – 400 kg
 (para evitar registros erróneos por typos)
 
-3. Estatura (m)
 
-Rango válido típico: 0.30 – 2.50 m
-(ó en cm si lo manejas así: 30 – 250 cm)
 
 4. Índice de Masa Corporal (IMC)
 peso / (estatura * estatura)
@@ -43,35 +53,132 @@ Normal: 95% – 100%
 Ligeramente baja: 90% – 94%
 Crítica: < 90%
 Para validación: [50 – 100]
-
-6. Presión sistólica (mmHg)
-
-Normal: 90 – 120
-Elevada: 121 – 129
-Hipertensión grado 1: 130 – 139
-Hipertensión grado 2: ≥ 140
-Hipotensión: < 90
-Validación general: [50 – 250]
-
-7. Presión diastólica (mmHg)
-
-Normal: 60 – 80
-Elevada: 81 – 89
-Hipertensión grado 1: 90 – 99
-Hipertensión grado 2: ≥ 100
-Hipotensión: < 60
-Validación general: [30 – 150]
 	 * 
 	 * */
 	
 	@Override
-	public String validarSignosVitales(SignosVitalesDTO signosVitales) {
+	public String validarSignosVitales(SignosVitalesDTO signosVitales) throws BusinessException{
 		StringBuilder sb = new StringBuilder();
+		SignoVitalEntity et = new SignoVitalEntity();
+		PacienteEntity pe;
+		Double imc = imc = signosVitales.getPeso() / (Math.pow(signosVitales.getEstatura(), 2));
+		pe = em.find(PacienteEntity.class,signosVitales.getIdPaciente());
+		if(pe==null) {
+			throw new BusinessException("Paciente no encontrado, validar.");
+		}
 		sb.append(validarTemperatura(signosVitales.getTemperatura()));
 		sb.append(validarPeso(signosVitales.getEstatura(),signosVitales.getPeso()));
+		sb.append(validarEstatura(signosVitales.getEstatura()));
+		sb.append(validarPresion(signosVitales));
+		sb.append(validarOxigenacion(signosVitales));
+		//Se registran los datos en tabla y paciente
+		if(!sb.toString().isBlank() || !sb.toString().isEmpty()) {
+			et.setObservaciones(sb.toString());
+		}
+		et.setEstatura(signosVitales.getEstatura());
+		et.setFechaRegistro(LocalDateTime.now());
+		et.setPresionDiastolica(signosVitales.getPresionDiastolica());
+		et.setPresionSistolica(signosVitales.getPresionSistolica());
+		et.setPeso(signosVitales.getPeso());
+		et.setImc(imc);
+		et.setOxigenacion(signosVitales.getOxigenacion());
+		et.setPaciente(pe);
+		em.persist(et);
+		
+		return "Registro exitoso";
+	}
+	private String validarOxigenacion(SignosVitalesDTO signosVitales) {
+		// TODO: Implementar metodo para la oxigenacion de acuerdo a tipo de pacientes
+		return null;
+	}
+	/**
+	 * Metodo para validaciones de presion arterial, se toma en cuenta datos generales de los signos vitales
+	 * para cada tipo de paciente.
+	 * @param signosVitales
+	 * @return
+	 */
+	private String validarPresion(SignosVitalesDTO signosVitales) {
+		boolean esPediatrico;
+		boolean esAdolescente;
+		boolean esAdulto;
+		boolean esAdultoMayor;
+		boolean esObeso;
+		PersonaEntity persona;
+		LocalDate fechaNacimiento;
+		Double presionSistolica;
+		Double presionDiastolica;
+		StringBuilder sb = new StringBuilder();
+		int edad;
+		//120/80 (sist/diast)
+		
+		
+		persona = em.find(PersonaEntity.class,signosVitales.getIdPaciente());
+		fechaNacimiento = persona.getFechaNacimiento();
+		edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+		esPediatrico = edad >= 1 && edad <= 12;
+		esAdolescente = edad >=13 && edad  <= 17;
+		esAdulto = edad >=18 && edad <= 59;
+		esAdultoMayor = edad >=60 && edad <= 105;
+		
+		if(esPediatrico) {
+			/**
+			 * TODO: implementar validaciones correctas
+			 * Comparar PAS y PAD con tablas percentilares:
+			 * Normal: < 90 percentil
+			 * Elevada: 90–95 percentil o 120/80 (lo que sea menor)
+			 * Hipertensión grado 1: 95–95+12 mmHg
+			 * Hipertensión grado 2: ≥ 95+12 mmHg
+			 * Talla correcta y brazalete proporcional al brazo.
+			 * Medir tres veces y promediar.
+			 */
+		} else if (esAdolescente || esAdulto) {
+			presionSistolica = signosVitales.getPresionSistolica();
+			presionDiastolica = signosVitales.getPresionDiastolica();
+			if((Double.compare(presionSistolica,120) > 0 || Double.compare(presionSistolica,129) < 0) 
+					&& Double.compare(presionDiastolica,80) < 0) {
+				sb.append(PacienteConstants.MSG_PRESION_ELEVADA);
+			} else if((Double.compare(presionSistolica, 130) > 0) || Double.compare(presionSistolica,139) < 0
+					&& (Double.compare(presionDiastolica,80) > 0 || Double.compare(presionDiastolica,89)<0)) {
+				sb.append(PacienteConstants.MSG_PRESION_GRADO_I);
+			} else if(Double.compare(presionSistolica,140)>=1 && Double.compare(presionDiastolica,90)>=0) {
+				sb.append(PacienteConstants.MSG_PRESION_GRADO_II);
+			} else if(Double.compare(presionSistolica,180)>=0 && Double.compare(presionDiastolica,120)>=0){
+				sb.append(PacienteConstants.MSG_PRESION_CRISIS_HIPER);
+			}
+		} else if(esAdultoMayor) {
+			//TODO: incluir validaciones:
+			
+			/**
+			 * Su “barómetro” suele ser más rígido, así que se vigila con lupa.
+			 * 
+			 * ✅ Validaciones 
+			 * Mantener <130/80 en la mayoría de guías. Considerar
+			 * variaciones ortostáticas: Caída ≥20 mmHg PAS al ponerse de pie Caída ≥10 mmHg
+			 * PAD Riesgo mayor de “HTA en bata blanca”.
+			 * 
+			 */
+		}
 		return sb.toString();
 	}
-	
+	/**
+	 * Validar estatura, en cms.
+	 * @param estatura
+	 * @return
+	 */
+	private String validarEstatura(Double estatura) {
+		StringBuilder sb = new StringBuilder();
+		if(Double.compare(estatura, 0)>0) {
+			if(Double.compare(estatura,30)>0 && Double.compare(estatura,250)<0){
+				return sb.toString();
+			} else {
+				sb.append("Estatura: Datos fuera de rango.");
+			}
+		} else {
+			
+		}
+		return sb.toString();
+	}
+
 	/**
 	 * Índice de Masa Corporal (IMC)
 		peso / (estatura * estatura)
@@ -89,10 +196,7 @@ Validación general: [30 – 150]
 		if(Double.compare(peso, 0) > 0 && Double.compare(estatura,0) > 0) {
 			//aqui validamos el IMC
 			imc = peso / (Math.pow(estatura, 2));
-			if(Double.compare(imc,18.5) > 0 && Double.compare(imc,24.9) < 0) {
-				sb.append("IMC: OK");
-				return sb.toString();
-			} else if(Double.compare(imc,25.0) > 0 && Double.compare(imc,29.9) < 0) {
+			if(Double.compare(imc,25.0) > 0 && Double.compare(imc,29.9) < 0) {
 				sb.append("IMC: Sobrepeso");
 				return sb.toString();
 			} else if(Double.compare(imc,30.0) > 0 && Double.compare(imc,34.9) < 0) {
@@ -104,15 +208,16 @@ Validación general: [30 – 150]
 			}  else if(Double.compare(imc,40.0) > 0) {
 				sb.append("IMC: Obesidad III");
 				return sb.toString();				
+			} else {
+				return sb.toString();
 			}
 		} else {
 			sb.append("Valores invalidos, revisar peso y estatura.");
 			return sb.toString();
 		}
-		return null;
 	}
 
-	private String validarTemperatura(Double temperatura) {
+	private String validarTemperatura(Double temperatura) throws BusinessException {
 		StringBuilder sb = new StringBuilder();
 		if(Double.compare(temperatura, 0)>0) {
 			if(Double.compare(temperatura, 35)<0) {
@@ -124,12 +229,11 @@ Validación general: [30 – 150]
 			} else if(Double.compare(temperatura, 38)>0) {
 				sb.append("Paciente presenta fiebre.");
 				return sb.toString();
+			} else {
+				return sb.toString();
 			}			
 		} else {
-			sb.append("Valores invalidos, debe ser mayor a 35.");
-			return sb.toString();
+			throw new BusinessException("Rangos invalidos, por favor valide.");
 		}
-		return null;
 	}
-
 }
